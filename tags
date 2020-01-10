@@ -1,0 +1,14 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CLOSING_COST_PERCENTAGE	rental.py	/^CLOSING_COST_PERCENTAGE = 0.05$/;"	v
+FORMAT_FILES	Makefile	/^FORMAT_FILES ?= .\/$/;"	m
+calculate_rent_for_roi	rental.py	/^def calculate_rent_for_roi(target_roi, operating_expenses, monthly_mortgage, initial_cash_investment):$/;"	f
+cli	median_price.py	/^def cli(zipcode):$/;"	f
+cli	rental.py	/^def cli(purchase_price, down_payment_percentage=20, monthly_property_taxes=None, initial_repairs=0, rent=None, interest_rate=4.5, monthly_insurance=50, mortgage_term=30, management_percentage=11, capex_percentage=7):$/;"	f
+main	zillow_api.py	/^def main():$/;"	f
+median_rental_price	median_price.py	/^def median_rental_price(zipcode):$/;"	f
+median_sales_price	median_price.py	/^def median_sales_price(zipcode):$/;"	f
