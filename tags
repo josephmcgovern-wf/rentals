@@ -6,9 +6,26 @@
 !_TAG_PROGRAM_VERSION	5.8	//
 CLOSING_COST_PERCENTAGE	rental.py	/^CLOSING_COST_PERCENTAGE = 0.05$/;"	v
 FORMAT_FILES	Makefile	/^FORMAT_FILES ?= .\/$/;"	m
-calculate_rent_for_roi	rental.py	/^def calculate_rent_for_roi(target_roi, operating_expenses, monthly_mortgage, initial_cash_investment):$/;"	f
+calculate_rent_for_roi	rental.py	/^def calculate_rent_for_roi($/;"	f
+cap_rate	rental.py	/^    cap_rate = ($/;"	v
+capex	rental.py	/^    capex = rent * (capex_percentage \/ 100)$/;"	v
+cash_flow	rental.py	/^    cash_flow = monthly_net_operating_expenses - monthly_mortgage$/;"	v
 cli	median_price.py	/^def cli(zipcode):$/;"	f
-cli	rental.py	/^def cli(purchase_price, down_payment_percentage=20, monthly_property_taxes=None, initial_repairs=0, rent=None, interest_rate=4.5, monthly_insurance=50, mortgage_term=30, management_percentage=11, capex_percentage=7):$/;"	f
+cli	rental.py	/^def cli($/;"	f
+closing_costs	rental.py	/^    closing_costs = purchase_price * CLOSING_COST_PERCENTAGE$/;"	v
+coc_roi	rental.py	/^    coc_roi = cash_flow * 12 \/ (down_payment + closing_costs) * 100$/;"	v
+down_payment	rental.py	/^    down_payment = purchase_price * (down_payment_percentage \/ 100)$/;"	v
 main	zillow_api.py	/^def main():$/;"	f
+management	rental.py	/^    management = rent * (management_percentage \/ 100)$/;"	v
 median_rental_price	median_price.py	/^def median_rental_price(zipcode):$/;"	f
 median_sales_price	median_price.py	/^def median_sales_price(zipcode):$/;"	f
+monthly_interest_rate	rental.py	/^    monthly_interest_rate = (interest_rate \/ 100) \/ 12$/;"	v
+monthly_mortgage	rental.py	/^    monthly_mortgage = ($/;"	v
+monthly_net_operating_expenses	rental.py	/^    monthly_net_operating_expenses = rent - operating_expenses$/;"	v
+monthly_property_taxes	rental.py	/^        monthly_property_taxes = (purchase_price * 0.01941) \/ 12$/;"	v
+operating_expenses	rental.py	/^    operating_expenses = ($/;"	v
+principal	rental.py	/^    principal = purchase_price - down_payment$/;"	v
+rent	rental.py	/^        rent = purchase_price * 0.01$/;"	v
+repairs	rental.py	/^    repairs = rent * 0.05$/;"	v
+total_payments	rental.py	/^    total_payments = mortgage_term * 12$/;"	v
+vacancy	rental.py	/^    vacancy = rent * 0.05$/;"	v
