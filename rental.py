@@ -1,11 +1,12 @@
 import click
+import math
 
 
-CLOSING_COST_PERCENTAGE = 0.05
+CLOSING_COST_PERCENTAGE = 0.0376
 
 
 @click.command()
-@click.argument("purchase_price", type=float)
+@click.argument("purchase_price", type=str)
 @click.option("--down-payment-percentage", type=float, default=20)
 @click.option("--rent", type=float)
 @click.option("--interest-rate", type=float, default=4.5)
@@ -27,6 +28,12 @@ def cli(
     management_percentage=11,
     capex_percentage=7,
 ):
+    purchase_price = purchase_price.replace('k', '000')
+    try:
+        purchase_price = float(purchase_price)
+    except:
+        click.secho("Expected purchase price to be a float, but got \"{}\"".format(purchase_price), fg='red')
+        exit(1)
     # Calculate mortgage
     closing_costs = purchase_price * CLOSING_COST_PERCENTAGE
     down_payment = purchase_price * (down_payment_percentage / 100)
@@ -63,11 +70,7 @@ def cli(
     ) * 100
     coc_roi = cash_flow * 12 / (down_payment + closing_costs) * 100
 
-    # TODO add income growth (2%)
-    # TODO add annual property value growth (2%)
-    # TODO add annual expenses growth (2%)
-    # TODO add sales expenses for when you sell the property to pay the real estate agent (9%)
-    # TODO calculate annual income, annual expenses (operating & mortgage), annual cashflow, annual Coc ROI, property value each year, equity each year, loan balance each year, and total profit if sold each year. Do this for year 1, 2, 3, 5, 10, 20, and 30.
+    # Print out up-front expenses
     click.echo("")
     click.echo("Down payment: {}".format(down_payment))
     click.echo("Expected closing costs: {}".format(closing_costs))
@@ -78,16 +81,12 @@ def cli(
     )
     click.echo("")
 
+    # Print out monthly income/expenses
     click.echo("Monthly rental income: ${}".format(rent))
     click.echo("Monthly mortage: ${}".format(monthly_mortgage))
     click.echo("Monthly operating expenses: ${}".format(operating_expenses))
 
-    # click.echo('')
-    # click.echo('Debt service ratio: {} (this should be at least 1.2)'.format(monthly_net_operating_expenses / monthly_mortgage))
-    # click.echo('2% test result: {}'.format(((rent / float(purchase_price)) * 100)))
-    # click.echo('You must charge ${}/mo to meet the 2% test'.format(purchase_price * 0.02))
-
-    # The big important numbers!
+    # Print out cash flow and return on investment!
     click.echo("")
     click.secho(
         "Monthly cash flow: {}".format(cash_flow),
@@ -98,15 +97,17 @@ def cli(
     )
     click.secho("Cap rate: {}".format(cap_rate), fg="green" if cap_rate >= 8 else "red")
 
-
-def calculate_rent_for_roi(
-    target_roi, operating_expenses, monthly_mortgage, initial_cash_investment
-):
-    return (
-        target_roi * initial_cash_investment
-        + operating_expenses
-        + monthly_mortgage * 12
-    )
+    # Calculate what rent needs to be in order to get a 12% CoC ROI and at
+    # least $200/mo cash flow
+    cash_flow_target_rent = -1 * (monthly_mortgage + 200 + monthly_property_taxes + monthly_insurance) / (.05 + .05 + (management_percentage / 100) + (capex_percentage / 100) - 1)
+    target_roi = .12
+    coc_roi_target_rent = -1 * (12 * monthly_insurance + 12 * monthly_mortgage + 12 * monthly_property_taxes + down_payment*target_roi + closing_costs*target_roi) / (12.0 * ((capex_percentage/100) + (management_percentage/100) + 0.05 + 0.05 - 1))
+    target_rent = math.ceil(max(cash_flow_target_rent, coc_roi_target_rent))
+    while target_rent % 5 != 0:
+        target_rent += 1
+    if rent < target_rent:
+        click.echo("")
+        click.secho("Minimum rent to get $200 cash flow and 12% return: ${}".format(target_rent), fg='cyan')
 
 
 if __name__ == "__main__":
