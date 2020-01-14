@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: python-code-format
         name: format
-        entry: bash -c 'make format FORMAT_FILES=$@; git add $@'
+        entry: bash -c 'make format FORMAT_FILES=$@ && git add $@'
         language: system
         pass_filenames: true
         types: [python]
