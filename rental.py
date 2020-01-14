@@ -9,7 +9,7 @@ CLOSING_COST_PERCENTAGE = 0.0376
 @click.argument("purchase_price", type=str)
 @click.option("--down-payment-percentage", type=float, default=20)
 @click.option("--rent", type=float)
-@click.option("--interest-rate", type=float, default=4.5)
+@click.option("--interest-rate", type=float, default=5)
 @click.option("--mortgage-term", type=float, default=30)
 @click.option("--initial-repairs", type=float, default=0)
 @click.option("--management-percentage", type=float, default=10)
