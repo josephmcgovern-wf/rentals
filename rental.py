@@ -2,16 +2,13 @@ import click
 import math
 
 
-CLOSING_COST_PERCENTAGE = 0.0376
-
-
 @click.command()
 @click.argument("purchase_price", type=str)
 @click.option("--down-payment-percentage", type=float, default=20)
 @click.option("--rent", type=float)
 @click.option("--interest-rate", type=float, default=5)
 @click.option("--mortgage-term", type=float, default=30)
-@click.option("--initial-repairs", type=float, default=0)
+@click.option("--initial-repairs", type=str, default='0')
 @click.option("--management-percentage", type=float, default=10)
 @click.option("--monthly-property-taxes", type=float)
 @click.option("--monthly-insurance", type=float, default=50)
@@ -34,8 +31,14 @@ def cli(
     except:
         click.secho("Expected purchase price to be a float, but got \"{}\"".format(purchase_price), fg='red')
         exit(1)
+    initial_repairs = initial_repairs.replace('k', '000')
+    try:
+        initial_repairs = float(initial_repairs)
+    except:
+        click.secho("Expected initial repairs to be a float, but got \"{}\"".format(initial_repairs), fg='red')
+        exit(1)
     # Calculate mortgage
-    closing_costs = purchase_price * CLOSING_COST_PERCENTAGE
+    closing_costs = 3000
     down_payment = purchase_price * (down_payment_percentage / 100)
     principal = purchase_price - down_payment
     monthly_interest_rate = (interest_rate / 100) / 12
@@ -68,12 +71,11 @@ def cli(
     cap_rate = (
         monthly_net_operating_expenses * 12 / (purchase_price + initial_repairs)
     ) * 100
-    coc_roi = cash_flow * 12 / (down_payment + closing_costs) * 100
+    coc_roi = cash_flow * 12 / (down_payment + closing_costs + initial_repairs) * 100
 
     # Print out up-front expenses
     click.echo("")
     click.echo("Down payment: {}".format(down_payment))
-    click.echo("Expected closing costs: {}".format(closing_costs))
     click.echo(
         "Cash needed to make purchase: {}".format(
             down_payment + closing_costs + initial_repairs
@@ -85,6 +87,12 @@ def cli(
     click.echo("Monthly rental income: ${}".format(rent))
     click.echo("Monthly mortage: ${}".format(monthly_mortgage))
     click.echo("Monthly operating expenses: ${}".format(operating_expenses))
+    click.echo(f"\tMonthly property taxes: ${monthly_property_taxes}")
+    click.echo(f"\tMonthly insurance: ${monthly_insurance}")
+    click.echo(f"\tRepairs: ${repairs}")
+    click.echo(f"\tVacancy: ${vacancy}")
+    click.echo(f"\tManagement: ${management}")
+    click.echo(f"\tCapEx: ${capex}")
 
     # Print out cash flow and return on investment!
     click.echo("")
